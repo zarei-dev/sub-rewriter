@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>{{ panel_name }} — {{ tagline }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Fraunces:opsz,wght@9..144,800;9..144,900&display=swap" rel="stylesheet">
+<script src="_static/qr.js"></script>
+<style>
+  :root {
+    --bg: #0b0d0a;
+    --bg-2: #0f1310;
+    --ink: #e8ebe5;
+    --ink-dim: #8b9088;
+    --ink-faint: #4a4f48;
+    --rule: #1d211c;
+    --accent: #c4ff3d;
+    --accent-2: #ff6b35;
+    --warn: #ffb13d;
+    --bad: #ff5b5b;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Vazirmatn', 'Tahoma', 'Iran Sans', 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(196, 255, 61, 0.04), transparent 70%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0 0.9 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection { background: var(--accent); color: var(--bg); }
+
+  /* monospace stays LTR */
+  .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; direction: ltr; unicode-bidi: embed; }
+
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ---- Header ---- */
+  .head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    direction: ltr;
+  }
+  .brand h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 38px;
+    letter-spacing: -0.02em;
+    margin: 0;
+    line-height: 1;
+  }
+  .brand .slash {
+    color: var(--accent);
+    font-weight: 800;
+    font-style: normal;
+  }
+  .tag {
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-weight: 500;
+    direction: rtl;
+    margin-right: 6px;
+  }
+  .meta {
+    color: var(--ink-dim);
+    font-size: 11px;
+    text-align: left;
+  }
+  .meta .dot { color: var(--accent); margin-left: 4px; }
+
+  /* ---- Stats panel ---- */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 32px;
+  }
+  .stat {
+    background: var(--bg-2);
+    padding: 18px 20px 16px;
+  }
+  .stat .label {
+    color: var(--ink-dim);
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .stat .value {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .stat .sub {
+    color: var(--ink-faint);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .stat.alert .value { color: var(--warn); }
+  .stat.danger .value { color: var(--bad); }
+
+  .bar {
+    height: 4px;
+    background: var(--rule);
+    margin-top: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.6s ease;
+  }
+  .bar-fill.warn { background: var(--warn); }
+  .bar-fill.bad { background: var(--bad); }
+
+  /* ---- Sub URL block ---- */
+  .sub-block {
+    border: 1px solid var(--rule);
+    background: var(--bg-2);
+    padding: 18px 20px;
+    margin-bottom: 32px;
+  }
+  .sub-block .label {
+    color: var(--ink-dim);
+    font-size: 11px;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .sub-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .sub-url {
+    flex: 1;
+    min-width: 200px;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--bg);
+    padding: 11px 13px;
+    border: 1px solid var(--rule);
+    overflow-x: auto;
+    white-space: nowrap;
+    user-select: all;
+    direction: ltr;
+    text-align: left;
+  }
+  .hint {
+    color: var(--ink-faint);
+    font-size: 11px;
+    margin-top: 10px;
+    line-height: 1.6;
+  }
+
+  .btn {
+    font-family: 'Vazirmatn', 'Tahoma', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 9px 16px;
+    border: 1px solid var(--rule);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .btn.primary:hover { background: transparent; color: var(--accent); }
+
+  /* ---- Section title ---- */
+  .section-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .section-title h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: 22px;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .section-title .count {
+    color: var(--ink-faint);
+    font-size: 12px;
+  }
+
+  /* ---- Node cards ---- */
+  .nodes {
+    display: grid;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .node {
+    background: var(--bg-2);
+    padding: 18px 20px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .node-info { min-width: 0; }
+  .node-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .node-endpoint {
+    color: var(--ink-dim);
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .node-endpoint .mono { color: var(--ink); }
+  .badges { margin-bottom: 12px; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 8px;
+    border: 1px solid var(--ink-faint);
+    color: var(--ink-dim);
+    margin-left: 4px;
+    direction: ltr;
+  }
+  .badge.ok { color: var(--accent); border-color: var(--accent); }
+  .node-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .node-actions .btn {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+  .node-actions .btn.copied {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .qr {
+    width: 96px;
+    height: 96px;
+    background: var(--ink);
+    padding: 6px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .qr:hover { transform: scale(1.04); }
+  .qr canvas, .qr img { display: block; width: 100%; height: 100%; }
+
+  /* ---- QR modal ---- */
+  .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal.open { display: flex; }
+  .modal-inner {
+    background: var(--ink);
+    padding: 20px;
+    max-width: 90vw;
+  }
+  .modal-inner canvas { display: block; max-width: 100%; height: auto !important; }
+  .modal-inner .modal-cap {
+    color: var(--bg);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  /* ---- Footer ---- */
+  .foot {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    color: var(--ink-faint);
+    font-size: 11px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* ---- Toast ---- */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--accent);
+    color: var(--bg);
+    padding: 10px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.25s ease;
+    pointer-events: none;
+    z-index: 200;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ---- Mobile ---- */
+  @media (max-width: 640px) {
+    .wrap { padding: 20px 14px 60px; }
+    .brand h1 { font-size: 30px; }
+    .stats { grid-template-columns: 1fr; }
+    .node { grid-template-columns: 1fr; }
+    .qr { width: 100%; max-width: 220px; height: auto; aspect-ratio: 1; margin: 0 auto; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="brand">
+      <h1>{{ panel_name }}<span class="slash">/</span></h1>
+      <span class="tag">{{ tagline }}</span>
+    </div>
+    <div class="meta">
+      <span class="dot">●</span> {{ nodes|length }} مورد فعال
+    </div>
+  </header>
+
+  {% if userinfo %}
+  <div class="stats">
+    <div class="stat">
+      <div class="label">حجم مصرف‌شده</div>
+      <div class="value mono" id="used-val">…</div>
+      <div class="sub">از <span class="mono" id="total-val">…</span></div>
+      <div class="bar"><div class="bar-fill" id="used-bar" style="width: 0%"></div></div>
+    </div>
+    <div class="stat" id="expire-stat">
+      <div class="label">زمان باقی‌مانده</div>
+      <div class="value" id="expire-val">…</div>
+      <div class="sub" id="expire-sub">&nbsp;</div>
+    </div>
+    <div class="stat">
+      <div class="label">دریافت / ارسال</div>
+      <div class="value mono" id="dl-val" style="font-size: 16px;">…</div>
+      <div class="sub mono" id="ul-val">…</div>
+    </div>
+  </div>
+  <script>
+    window.__userinfo = {
+      upload: {{ userinfo.upload or 0 }},
+      download: {{ userinfo.download or 0 }},
+      total: {{ userinfo.total or 0 }},
+      expire: {{ userinfo.expire or 0 }},
+    };
+  </script>
+  {% endif %}
+
+  <div class="sub-block">
+    <div class="label">لینک اشتراک شما</div>
+    <div class="sub-row">
+      <div class="sub-url mono" id="sub-url">{{ sub_url }}</div>
+      <button class="btn primary" onclick="copyText('{{ sub_url }}', this, 'لینک کپی شد')">کپی لینک</button>
+    </div>
+    <div class="hint">
+      این لینک را در برنامه‌ی خود وارد کنید تا تنظیمات به‌صورت خودکار اضافه شوند. به‌روزرسانی منظم پیشنهاد می‌شود.
+    </div>
+  </div>
+
+  <div class="section-title">
+    <h2>سرورها</h2>
+    <span class="count">{{ nodes|length }} مورد</span>
+  </div>
+
+  <div class="nodes">
+    {% for n in nodes %}
+    <div class="node">
+      <div class="node-info">
+        <div class="node-name">{{ n.remark }}</div>
+        <div class="node-endpoint">
+          نقطه: <span class="mono">{{ n.host }}{% if n.port %}:{{ n.port }}{% endif %}</span>
+        </div>
+        <div class="badges">
+          {% if n.security == 'tls' %}<span class="badge ok">TLS</span>{% endif %}
+          {% if n.type %}<span class="badge">{{ n.type }}</span>{% endif %}
+          <span class="badge">H2</span>
+        </div>
+        <div class="node-actions">
+          <button class="btn" data-payload="{{ n.payload }}" onclick="copyPayload(this)">کپی پیکربندی</button>
+          <button class="btn" data-payload="{{ n.payload }}" onclick="showBigQR(this.dataset.payload)">QR بزرگ</button>
+        </div>
+      </div>
+      <div class="qr" data-payload="{{ n.payload }}" onclick="showBigQR(this.dataset.payload)"><canvas></canvas></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <footer class="foot">
+    <span>{{ panel_name }}</span>
+    <span>به‌روزرسانی خودکار فعال است</span>
+  </footer>
+</div>
+
+<div class="modal" id="modal" onclick="closeQR()">
+  <div class="modal-inner" onclick="event.stopPropagation()">
+    <canvas id="modal-qr"></canvas>
+    <div class="modal-cap">برای بستن، کلیک کنید</div>
+  </div>
+</div>
+
+<div class="toast" id="toast">کپی شد</div>
+
+<script>
+  // ---- Persian-friendly byte / time formatters ----
+  function fmtBytes(n) {
+    if (!n || n < 0) return '0 B';
+    const u = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+    let i = 0;
+    while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+    return (i >= 3 ? n.toFixed(2) : n.toFixed(1)) + ' ' + u[i];
+  }
+  function fmtTimeLeft(seconds) {
+    if (!seconds || seconds <= 0) return 'منقضی شده';
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    if (d > 0) return d + ' روز ' + h + ' ساعت';
+    if (h > 0) return h + ' ساعت ' + m + ' دقیقه';
+    return m + ' دقیقه';
+  }
+
+  // ---- populate stats ----
+  if (window.__userinfo) {
+    const u = window.__userinfo;
+    const used = (u.upload || 0) + (u.download || 0);
+    const total = u.total || 0;
+    const pct = total > 0 ? Math.min(100, used / total * 100) : 0;
+    document.getElementById('used-val').textContent = fmtBytes(used);
+    document.getElementById('total-val').textContent = total > 0 ? fmtBytes(total) : 'نامحدود';
+    const bar = document.getElementById('used-bar');
+    bar.style.width = pct + '%';
+    if (pct > 90) bar.classList.add('bad');
+    else if (pct > 75) bar.classList.add('warn');
+
+    const stat = document.getElementById('expire-stat');
+    if (u.expire > 0) {
+      const left = u.expire - Math.floor(Date.now() / 1000);
+      document.getElementById('expire-val').textContent = fmtTimeLeft(left);
+      const d = new Date(u.expire * 1000);
+      document.getElementById('expire-sub').textContent =
+        d.toISOString().slice(0, 10);
+      if (left <= 0) stat.classList.add('danger');
+      else if (left < 86400 * 3) stat.classList.add('alert');
+    } else {
+      document.getElementById('expire-val').textContent = 'نامحدود';
+      document.getElementById('expire-sub').textContent = 'بدون محدودیت زمانی';
+    }
+
+    document.getElementById('dl-val').textContent = '↓ ' + fmtBytes(u.download || 0);
+    document.getElementById('ul-val').textContent = '↑ ' + fmtBytes(u.upload || 0);
+  }
+
+  // ---- Decode hidden payload (server-side base64) ----
+  function decodePayload(b64) {
+    try { return atob(b64); } catch (e) { return ''; }
+  }
+
+  // ---- QR generation (only happens on JS-enabled clients, not crawlers) ----
+  document.querySelectorAll('.qr').forEach(el => {
+    const payload = decodePayload(el.dataset.payload);
+    const canvas = el.querySelector('canvas');
+    if (payload && canvas) {
+      QRCode.toCanvas(canvas, payload, {
+        width: 96, margin: 0,
+        color: { dark: '#0b0d0a', light: '#e8ebe5' }
+      }, () => {});
+    }
+  });
+
+  function showBigQR(b64) {
+    const payload = decodePayload(b64);
+    if (!payload) return;
+    const m = document.getElementById('modal');
+    const c = document.getElementById('modal-qr');
+    QRCode.toCanvas(c, payload, {
+      width: 380, margin: 1,
+      color: { dark: '#0b0d0a', light: '#e8ebe5' }
+    }, () => {});
+    m.classList.add('open');
+  }
+  function closeQR() {
+    document.getElementById('modal').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeQR(); });
+
+  // ---- Copy ----
+  function showToast(text) {
+    const t = document.getElementById('toast');
+    t.textContent = text;
+    t.classList.add('show');
+    clearTimeout(window.__toastT);
+    window.__toastT = setTimeout(() => t.classList.remove('show'), 1600);
+  }
+  function _copy(text, btn, msg) {
+    const done = () => {
+      if (btn) {
+        const orig = btn.textContent;
+        btn.classList.add('copied');
+        btn.textContent = '✓ کپی شد';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1400);
+      }
+      showToast(msg || 'در حافظه کپی شد');
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done);
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove();
+      done();
+    }
+  }
+  function copyText(text, btn, msg) { _copy(text, btn, msg); }
+  function copyPayload(btn) {
+    const text = decodePayload(btn.dataset.payload);
+    if (text) _copy(text, btn, 'پیکربندی کپی شد');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+
+services:
+  sub-rewriter:
+    build: .
+    container_name: sub-rewriter
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"   # bind localhost only; reverse-proxy in front
+    environment:
+      UPSTREAM_BASE: "https://sub.pokify.online/sub"
+      PANEL_NAME: "migrado"
+      PANEL_TAGLINE: "پنل کاربری"
+      PUBLIC_SUB_URL_BASE: "https://my.migrado.life/panel"
+      REMARK_PREFIX: ""
+      UPSTREAM_TIMEOUT: "10"
+ 
